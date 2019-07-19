@@ -18,13 +18,18 @@ void controller_showMainMenu()
 
     keyboard_waitForAnyKey();
 
-    if(lastKey==KEY_A) circularList_incrementBy(&currentOption, 0, 1, -1);
-    if(lastKey==KEY_B) circularList_incrementBy(&currentOption, 0, 1, 1);
-    if(lastKey==KEY_AH) exit = true;
-    if(lastKey==KEY_BH)
-    {
-          if(currentOption==0) runAs_tempMonitor();
-          if(currentOption==1) controller_showProfileMenu();
+    if (lastKey==KEY_A) {
+      circularList_incrementBy(&currentOption, 0, 1, -1);
+    }
+    if (lastKey==KEY_B) {
+      circularList_incrementBy(&currentOption, 0, 1, 1);
+    }
+    if (lastKey==KEY_AH) {
+      exit = true;
+    }
+    if (lastKey==KEY_BH) {
+      if(currentOption==0) runAs_tempMonitor();
+      if(currentOption==1) controller_showProfileMenu();
     }
   }
 }
@@ -43,11 +48,16 @@ void controller_showProfileMenu()
 
     keyboard_waitForAnyKey();
 
-    if(lastKey==KEY_A) circularList_incrementBy(&currentOption, 0, 1, -1);
-    if(lastKey==KEY_B) circularList_incrementBy(&currentOption, 0, 1, 1);
-    if(lastKey==KEY_AH) exit = true;
-    if(lastKey==KEY_BH)
-    {
+    if(lastKey==KEY_A) {
+      circularList_incrementBy(&currentOption, 0, 1, -1);
+    }
+    if(lastKey==KEY_B) {
+      circularList_incrementBy(&currentOption, 0, 1, 1);
+    }
+    if(lastKey==KEY_AH) {
+      exit = true;
+    }
+    if(lastKey==KEY_BH) {
           if(currentOption==0) runAs_profile(REFLOW_PROFILE_LEADED);
           if(currentOption==1) runAs_profile(REFLOW_PROFILE_LEADFREE);
     }

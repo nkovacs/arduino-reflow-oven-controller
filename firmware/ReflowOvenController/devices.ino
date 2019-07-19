@@ -25,26 +25,25 @@ void keyboard_scan(boolean quickmode)
   if (flagHoldKey && !quickmode)
   {
       buzzer_beep(100);
-      while( !digitalRead(PINS_BTN_A) || !digitalRead(PINS_BTN_B)) {}
+      while( digitalRead(PINS_BTN_A) || digitalRead(PINS_BTN_B)) {}
       flagHoldKey = false;
       lastKey = KEY_NONE;
 
   }
-  else if (!digitalRead(PINS_BTN_A))
+  else if (digitalRead(PINS_BTN_A))
   {
-     while( !digitalRead(PINS_BTN_A) && (millis()-time) <= KEY_HOLD_TIME+KEY_HOLD_TIME_WAIT)
+     while( digitalRead(PINS_BTN_A) && (millis()-time) <= KEY_HOLD_TIME+KEY_HOLD_TIME_WAIT)
      {
         if (millis()-time >= KEY_DEBOUNCE_TIME) lastKey = KEY_A;
-        if (millis()-time >= KEY_HOLD_TIME) { if(!digitalRead(PINS_BTN_B)) lastKey = KEY_ABH; else lastKey = KEY_AH; flagHoldKey = true; }
+        if (millis()-time >= KEY_HOLD_TIME) { if(digitalRead(PINS_BTN_B)) lastKey = KEY_ABH; else lastKey = KEY_AH; flagHoldKey = true; }
      }
-
   }
-  else if (!digitalRead(PINS_BTN_B))
+  else if (digitalRead(PINS_BTN_B))
   {
-     while(!digitalRead(PINS_BTN_B) && (millis()-time) <= KEY_HOLD_TIME+KEY_HOLD_TIME_WAIT)
+     while(digitalRead(PINS_BTN_B) && (millis()-time) <= KEY_HOLD_TIME+KEY_HOLD_TIME_WAIT)
      {
         if (millis()-time >= KEY_DEBOUNCE_TIME)  lastKey = KEY_B;
-        if (millis()-time >= KEY_HOLD_TIME) { if(!digitalRead(PINS_BTN_A)) lastKey = KEY_ABH; else lastKey = KEY_BH; flagHoldKey = true; }
+        if (millis()-time >= KEY_HOLD_TIME) { if(digitalRead(PINS_BTN_A)) lastKey = KEY_ABH; else lastKey = KEY_BH; flagHoldKey = true; }
      }
   }
   else
@@ -54,10 +53,12 @@ void keyboard_scan(boolean quickmode)
   }
 }
 
+volatile bool waitForKeyInterrupted;
+
 // Waits until any key is pressed
 void keyboard_waitForAnyKey()
 {
-   do{ keyboard_scan(); } while (lastKey==KEY_NONE);
+  do{ keyboard_scan(); } while (lastKey==KEY_NONE && !waitForKeyInterrupted);
 }
 
 // Waits until no key is pressed

@@ -1,5 +1,5 @@
 // Import libraries
-#include <LiquidCrystal.h>
+#include "LiquidCrystal_I2C.h"
 #include "FlexiTimer2_local.h"
 #include "PID_v1_local.h"
 #include "MAX31855_local.h"
@@ -17,6 +17,7 @@
 #define PINS_TEMP_SO           9
 #define PINS_TEMP_CS           8
 #define PINS_TEMP_CLK          7
+/*
 #define PINS_LCD_LED           13
 #define PINS_LCD_RS            A2
 #define PINS_LCD_ENABLE        A1
@@ -24,6 +25,7 @@
 #define PINS_LCD_D5            12
 #define PINS_LCD_D6            11
 #define PINS_LCD_D7            10
+*/
 #define PINS_BUZZER            5
 #define PINS_BTN_A             2
 #define PINS_BTN_B             3
@@ -96,7 +98,8 @@ PID reflowOvenPID(&pid_input, &pid_output, &pid_setPoint, pid_kp, pid_ki, pid_kd
 MAX31855 thermocouple(PINS_TEMP_SO, PINS_TEMP_CS, PINS_TEMP_CLK);
 
 // LiquidCrystal LCD control object instance
-LiquidCrystal lcd(PINS_LCD_RS, PINS_LCD_ENABLE, PINS_LCD_D4, PINS_LCD_D5, PINS_LCD_D6, PINS_LCD_D7);
+//LiquidCrystal lcd(PINS_LCD_RS, PINS_LCD_ENABLE, PINS_LCD_D4, PINS_LCD_D5, PINS_LCD_D6, PINS_LCD_D7);
+LiquidCrystal_I2C lcd(0x27, LCD_COLS, LCD_ROWS);
 
 // Variables used on interrupt mode
 volatile boolean cancelFlag = false;    // Flag used to abort interrupt mode
@@ -123,7 +126,8 @@ void setup()
   };
 
   // Initialize LCD
-  lcd.begin( LCD_COLS,  LCD_ROWS);
+  // lcd.begin( LCD_COLS,  LCD_ROWS);
+  lcd.begin();
   lcd.createChar(SYMBOL_DEGREE, char_degree);
 
   // Pinmode inputs
@@ -131,6 +135,7 @@ void setup()
   pinMode(PINS_BTN_B, INPUT_PULLUP);
 
   // Pinmode outputs
+  /*
   pinMode(PINS_LCD_LED,     OUTPUT);
   pinMode(PINS_LCD_RS,      OUTPUT);
   pinMode(PINS_LCD_ENABLE,  OUTPUT);
@@ -138,10 +143,13 @@ void setup()
   pinMode(PINS_LCD_D5,      OUTPUT);
   pinMode(PINS_LCD_D6,      OUTPUT);
   pinMode(PINS_LCD_D7,      OUTPUT);
+  */
   pinMode(PINS_BUZZER,      OUTPUT);
 
   // Turn on lcd backlight
+  /*
   digitalWrite(PINS_LCD_LED, HIGH);
+  */
 
   // Tell the PID to range between 0 and 255 (PWM Output)
   reflowOvenPID.SetOutputLimits(0, 255);
@@ -162,5 +170,3 @@ void loop()
 {
   controller_run();
 }
-
-
